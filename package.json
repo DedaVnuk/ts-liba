@@ -1,0 +1,41 @@
+{
+  "name": "ts-liba",
+  "version": "0.0.1",
+  "description": "Utils and types helpers",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md",
+    "package.json"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "jest --verbose ./tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DedaVnuk/ts-liba.git"
+  },
+  "keywords": [
+    "Liba",
+    "utils",
+    "helpers",
+    "types"
+  ],
+  "author": "Sumarokov Vladimir <sumarokov.world@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DedaVnuk/ts-liba/issues"
+  },
+  "homepage": "https://github.com/DedaVnuk/ts-liba#readme",
+  "devDependencies": {
+    "@types/jest": "^29.5.4",
+    "jest": "^29.6.3",
+    "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  }
+}
