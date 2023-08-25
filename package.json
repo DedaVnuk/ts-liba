@@ -1,6 +1,6 @@
 {
   "name": "ts-liba",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Utils and types helpers",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -13,7 +13,8 @@
   ],
   "scripts": {
     "build": "tsc",
-    "test": "jest --verbose ./tests"
+    "test": "jest --verbose ./tests",
+    "test-watch": "jest --watch --verbose ./tests"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,8 @@
   },
   "keywords": [
     "Liba",
+    "typescript",
+    "ts",
     "utils",
     "helpers",
     "types"
