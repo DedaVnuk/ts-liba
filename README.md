@@ -4,4 +4,4 @@ Utils and types helpers
 
 ## Installation
 
-```npm i yourhelpers```
+```npm i ts-liba```
