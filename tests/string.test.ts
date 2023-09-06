@@ -6,7 +6,21 @@ import {
   camelCase,
   pascalCase,
   snakeCase,
+  format,
 } from '../src/index';
+
+test('format', () => {
+  const date = new Date('1991-08-29');
+  const [year, month, day] = [date.getFullYear(), `${date.getMonth() + 1}`.padStart(2, '0'), `${date.getDate()}`.padStart(2, '0')];
+
+  expect(format('{$3}.{$2}.{$1}', [year, month, day])).toBe('29.08.1991');
+  expect(format('', ['Hello', 'World'])).toBe('');
+  expect(format('{$1}, {$2}', ['Hello', 'World'])).toBe('Hello, World');
+
+  expect(format('{$1}, {$2}. {$4}', ['Hello', 'World', 'more', 'params'])).toBe('Hello, World. params');
+  expect(format('{$1}: {$2}', ['This is', true])).toBe('This is: true');
+  expect(format('{$1}', [{ name: 'Joe' }])).toBe('[object Object]')
+})
 
 test('snakeCase', () => {
   expect(snakeCase('get price')).toBe('get_price');
