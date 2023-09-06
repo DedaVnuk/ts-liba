@@ -1,4 +1,8 @@
-import { arraySum, findBy } from '../src/index';
+import {
+  arraySum,
+  findBy,
+  map,
+} from '../src/index';
 
 const arr = [
   { name: 'Joe', age: 20, phone: { home: '1', work: '101' } },
@@ -6,6 +10,14 @@ const arr = [
   { name: 'Fred', age: 20, phone: { home: '3', work: '103' } },
   { name: 'Bar', age: 32, phone: { home: '4', work: '104' } },
 ]
+
+test('map', () => {
+  const getName = (user: typeof arr[0]) => user.name;
+  const getAge = ({ age }: typeof arr[0]) => age;
+
+  expect(map(arr, getName)).toEqual(['Joe', 'Baz', 'Fred', 'Bar']);
+  expect(arraySum(map(arr, getAge))).toBe(84);
+})
 
 test('findBy', () => {
   expect(findBy(arr, 'name', 'Baz')).toEqual(arr[1]);

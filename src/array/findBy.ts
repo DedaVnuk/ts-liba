@@ -1,5 +1,13 @@
 import { ObjectKeys, ObjectValueByKey, Split } from '../index';
 
+/**
+ * Obj extends Record<string, any>
+ * 
+ * @param arr - Obj[]
+ * @param key - ObjectKeys<Obj>
+ * @param needle - ObjectValueByKey<Obj, Key>
+ * @returns - Obj | undefined
+ */
 export default function findBy<
   Obj extends Record<string, any>,
   Key extends ObjectKeys<Obj>,
@@ -13,3 +21,6 @@ export default function findBy<
     }, item) === needle;
   });
 }
+
+
+findBy

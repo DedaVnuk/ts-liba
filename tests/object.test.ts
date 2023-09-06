@@ -1,10 +1,22 @@
-import { pick, omit } from '../src/index';
+import { pick, omit, keys, values, entries } from '../src/index';
 
 const obj = {
   name: 'Joe',
   age: 20,
   admin: false,
 }
+
+test('entries', () => {
+  expect(entries(obj)).toEqual([['name', 'Joe'], ['age', 20], ['admin', false]]);
+})
+
+test('values', () => {
+  expect(values(obj)).toEqual(['Joe', 20, false]);
+})
+
+test('keys', () => {
+  expect(keys(obj)).toEqual(['name', 'age', 'admin']);
+})
 
 test('pick', () => {
   expect(pick(obj, ['name'])).toEqual({ name: 'Joe' });

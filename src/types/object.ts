@@ -1,3 +1,5 @@
+import { UnionToTuple } from './index';
+
 type PathPrefix<Path extends string> = Path extends '' ? '' : `${Path}.`;
 
 type KeyIsString<Key> = Key extends string ? Key : never
@@ -24,4 +26,16 @@ export type ObjectValueByKey<
     : never
   : Key extends keyof Obj
     ? Obj[Key]
+    : never
+
+export type ObjectEntries<
+  Obj extends Record<string, any>,
+  Keys = UnionToTuple<keyof Obj>,
+  Res extends Array<[string, any]> = []
+> = Keys extends []
+  ? Res
+  : Keys extends [infer First extends string, ...infer Rest]
+    ? Rest extends string[]
+      ? ObjectEntries<Obj, Rest, [...Res, [First, Obj[First]]]>
+      : never
     : never
