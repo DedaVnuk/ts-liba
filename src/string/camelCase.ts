@@ -1,4 +1,4 @@
-import { Split } from '../index';
+import { Split, map, split } from '../index';
 import capitalize from './capitalize';
 
 export type CamelCase<
@@ -20,14 +20,14 @@ export default function camelCase<
   Str extends string,
   Delimiter extends string = ' '
 >(str: Str, delimiter = ' ' as Delimiter) {
-  return str
-    .split(delimiter)
-    .map((word, i) => {
-      if(i === 0) {
-        return word;
-      }
+  const words = split(str, delimiter);
 
-      return capitalize(word);
-    })
-    .join('') as CamelCase<Str, Delimiter>
+  return map(words, (word, i) => {
+    if(i === 0) {
+      return word;
+    }
+
+    return capitalize(word);
+  })
+  .join('') as CamelCase<Str, Delimiter>
 }

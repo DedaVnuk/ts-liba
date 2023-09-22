@@ -4,6 +4,9 @@ import {
   map,
   first,
   last,
+  reverse,
+  reduce,
+  join,
 } from '../src/index';
 
 const arr = [
@@ -11,7 +14,36 @@ const arr = [
   { name: 'Baz', age: 12, phone: { home: '2', work: '102' } },
   { name: 'Fred', age: 20, phone: { home: '3', work: '103' } },
   { name: 'Bar', age: 32, phone: { home: '4', work: '104' } },
-]
+] as const;
+
+test('join', () => {
+  expect(join([1, 2, 3])).toBe('123');
+  expect(join([])).toBe('');
+  expect(join(['Welcome', 'to', 'home'], '__')).toBe('Welcome__to__home');
+})
+
+test('reduce', () => {
+  expect(reduce(arr, [], (acc: string[], item) => {
+    acc.push(item.name)
+    return acc;
+  })).toEqual(['Joe', 'Baz', 'Fred', 'Bar'])
+
+  expect(reduce(arr, [], (acc: string[], item) => {
+    if(item.name.startsWith('B')) {
+      acc.push(item.name)
+    }
+    return acc;
+  })).toEqual(['Baz', 'Bar'])
+
+  expect(reduce([], 0, (acc, item) => acc + item)).toBe(0);
+  expect(reduce([1, 2, 3], 5, (acc, item) => acc + item)).toBe(11);
+})
+
+test('reverse', () => {
+  expect(reverse([1, 2, 3])).toEqual([3, 2, 1]);
+  expect(reverse([{ name: 'Joe' }, { name: 'Baz'}])).toEqual([{ name: 'Baz' }, { name: 'Joe' }]);
+  expect(reverse([])).toEqual([]);
+})
 
 test('last', () => {
   expect(last(arr)).toEqual(arr[3]);
@@ -24,8 +56,8 @@ test('first', () => {
 })
 
 test('map', () => {
-  const getName = (user: typeof arr[0]) => user.name;
-  const getAge = ({ age }: typeof arr[0]) => age;
+  const getName = (user: typeof arr[number]) => user.name;
+  const getAge = ({ age }: typeof arr[number]) => age;
 
   expect(map(arr, getName)).toEqual(['Joe', 'Baz', 'Fred', 'Bar']);
   expect(arraySum(map(arr, getAge))).toBe(84);

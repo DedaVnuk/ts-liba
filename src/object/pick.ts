@@ -1,6 +1,10 @@
-export default function pick<Obj extends Record<string, any>, Keys extends (keyof Obj)[]>(obj: Obj, keys: Keys): Pick<Obj, Keys[number]> {
-  return keys.reduce((acc, key) => {
+import { ArrayUnion, reduce } from '../index';
+
+export default function pick<Obj extends Record<string, any>, Keys extends ArrayUnion<keyof Obj>>(obj: Obj, keys: Keys): Pick<Obj, Keys[number]> {
+  const fn = (acc: Obj, key: keyof Obj) => {
     acc[key] = obj[key];
     return acc;
-  }, Object.create(null))
+  }
+
+  return reduce(keys, Object.create(null), fn);
 }

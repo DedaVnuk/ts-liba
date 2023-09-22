@@ -1,5 +1,5 @@
-export default function sum(arr: number[]): number {
-  return arr.reduce((acc, item) => {
-    return acc + item;
-  }, 0)
+import { ArrayUnion, reduce } from '../index';
+
+export default function sum(arr: ArrayUnion<number>): number {
+  return reduce(arr, 0, (acc, num) => acc + num);
 }
