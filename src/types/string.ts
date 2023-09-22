@@ -1,3 +1,5 @@
+import { ArrayUnion } from './array'
+
 export type TrimLeft<Str extends string> = Str extends ` ${infer S}`
   ? TrimLeft<S>
   : Str
@@ -23,15 +25,23 @@ export type Split<
     : Split<'', Delimiter, [...Res, Str]>
 
 export type Join<
-  Arr extends string[],
+  Arr extends ArrayUnion<any>,
   Delimiter extends string = ',',
   Res extends string = ''
-> = Arr extends []
+> = Arr['length'] extends 0
   ? Res
-  : Arr extends [infer First extends string, ...infer Rest]
-    ? Rest extends string[]
+  : Arr extends readonly [infer First extends number | string | boolean, ...infer Rest]
+    ? Rest extends readonly any[]
       ? Res extends ''
         ? Join<Rest, Delimiter, `${Res}${First}`>
         : Join<Rest, Delimiter, `${Res}${Delimiter}${First}`>
       : never
-    : never
+    : string
+
+export type Replace<
+  Str extends string,
+  Need extends string,
+  Replacer extends string = '',
+> = Str extends `${infer Before}${Need}${infer After}`
+  ? `${Before}${Replacer}${After}`
+  : Str

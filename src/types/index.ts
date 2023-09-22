@@ -20,3 +20,11 @@ type LastInUnion<U> = UnionToIntersection<U extends unknown ? (x: U) => 0 : neve
 export type UnionToTuple<T, Last = LastInUnion<T>> = [T] extends [never]
   ? []
   : [...UnionToTuple<Exclude<T, Last>>, Last];
+
+export type Tuple<
+  Len extends number,
+  T = unknown,
+  Res extends any[] = []
+> = Res['length'] extends Len
+  ? Res
+  : Tuple<Len, T, [...Res, T]>

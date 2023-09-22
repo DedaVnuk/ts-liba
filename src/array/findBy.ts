@@ -1,4 +1,4 @@
-import { ObjectKeys, ObjectValueByKey, Split, Func } from '../index';
+import { ObjectKeys, ObjectValueByKey, Split, ArrayUnion, Func, reduce } from '../index';
 
 /**
  * Obj extends Record<string, any>
@@ -13,14 +13,11 @@ export default function findBy<
   Key extends ObjectKeys<Obj>,
   Keys extends string[] = Split<Key extends string ? Key : never, '.'>,
   Need  extends ObjectValueByKey<Obj, Key> | Func<[Obj], boolean> = ObjectValueByKey<Obj, Key> | Func<[Obj], boolean>,
->(arr: Obj[], key: Key, needle: Need) {
+>(arr: ArrayUnion<Obj>, key: Key, needle: Need) {
   const keyParts = String(key).split('.') as Keys;
 
   return arr.find((item) => {
-    const res = keyParts.reduce((acc, part) => {
-      return acc[part];
-    }, item);
-
-    return typeof needle === 'function' ? needle(item) : res === needle as ObjectValueByKey<Obj, Key>;
+    const res: any = reduce(keyParts, item, (acc, part) => acc[part]);
+    return typeof needle === 'function' ? needle(item) : res === needle;
   });
 }

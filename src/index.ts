@@ -12,6 +12,9 @@ export const findBy = array.findBy;
 export const map = array.map;
 export const first = array.first;
 export const last = array.last;
+export const reverse = array.reverse;
+export const reduce = array.reduce;
+export const join = array.join;
 
 
 // number
@@ -28,6 +31,8 @@ export const entries = object.entries;
 
 
 // string
+export const split = string.split;
+export const repeat = string.repeat;
 export const format = string.format;
 export const uppercase = string.uppercase;
 export const lowercase = string.lowercase;
@@ -39,6 +44,7 @@ export const snakeCase = string.snakeCase;
 
 
 // utils
+export const defer = utils.defer;
 export const length = utils.length;
 export const curry = utils.curry;
 export const countdown = utils.countdown;
