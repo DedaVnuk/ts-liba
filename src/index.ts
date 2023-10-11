@@ -49,11 +49,3 @@ export const length = utils.length;
 export const curry = utils.curry;
 export const countdown = utils.countdown;
 export const repeater = utils.repeater;
-
-export default {
-  ...array,
-  ...number,
-  ...object,
-  ...string,
-  ...utils,
-};
