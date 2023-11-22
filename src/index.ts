@@ -44,6 +44,7 @@ export const snakeCase = string.snakeCase;
 
 
 // utils
+export const animate = utils.animate;
 export const defer = utils.defer;
 export const length = utils.length;
 export const curry = utils.curry;
