@@ -1,5 +1,5 @@
 import {
-  arraySum,
+  sum,
   findBy,
   map,
   first,
@@ -60,7 +60,7 @@ test('map', () => {
   const getAge = ({ age }: typeof arr[number]) => age;
 
   expect(map(arr, getName)).toEqual(['Joe', 'Baz', 'Fred', 'Bar']);
-  expect(arraySum(map(arr, getAge))).toBe(84);
+  expect(sum(map(arr, getAge))).toBe(84);
 })
 
 test('findBy', () => {
@@ -73,5 +73,5 @@ test('findBy', () => {
 })
 
 test('arraySum', () => {
-  expect(arraySum([5, 4, 1])).toBe(10);
+  expect(sum([5, 4, 1])).toBe(10);
 })
