@@ -1,6 +1,6 @@
 {
   "name": "ts-liba",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Utils and types helpers",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

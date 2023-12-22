@@ -1,3 +1,5 @@
+// types
+
 export type ArrayUnion<T> = T[] | readonly T[];
 
 export type First<Arr extends ArrayUnion<any>> = Arr[0];
@@ -142,6 +144,9 @@ export type Replace<
 > = Str extends `${infer Before}${Need}${infer After}` ? `${Before}${Replacer}${After}`
 	: Str;
 
+// ========
+// utils
+
 type AnimateProps = {
 	draw: Func<[number]>;
 	timeFunc?: Func<[number], number>;
@@ -237,6 +242,9 @@ export function repeater<T>(fn: Func<[number], T>, attempts: number): T {
 	throw new Error(`Function failed after ${attempts} attempts`);
 }
 
+// ========
+// array
+
 /**
  * Obj extends Record<string, any>
  *
@@ -313,6 +321,9 @@ export function sum(arr: ArrayUnion<number>): number {
 	return reduce(arr, 0, (acc, num) => acc + num);
 }
 
+// ========
+// number
+
 export function abs<T extends number>(num: T) {
 	return Math.abs(num) as Abs<T>;
 }
@@ -320,6 +331,9 @@ export function abs<T extends number>(num: T) {
 export function percentageOf<T extends number>(total: UINT<T>) {
 	return <V extends number>(value: UINT<V>) => value / total;
 }
+
+// ========
+// object
 
 export function entries<
 	Obj extends Record<string, any>,
@@ -362,6 +376,9 @@ export function pick<Obj extends Record<string, any>, Keys extends ArrayUnion<ke
 export function values<Obj extends Record<string, any>>(obj: Obj) {
 	return Object.values(obj) as ObjectValueByKey<Obj, ObjectKeys<Obj>>[];
 }
+
+// ========
+// string
 
 export type CamelCase<
 	Str extends string,
@@ -464,4 +481,18 @@ export function uncapitalize<Str extends string>(str: Str) {
 }
 export function uppercase<Str extends string>(str: Str) {
 	return str.toLocaleUpperCase() as Uppercase<Str>;
+}
+
+// ========
+// date
+
+const MILLISECONDS = 1000;
+const MINUTE = MILLISECONDS * 60;
+const HOUR = MINUTE * 60;
+const DAY = HOUR * 24;
+
+export function yearDayNumber(now = new Date()) {
+	const start = new Date(now.getFullYear(), 0, 0);
+	const diff = now.valueOf() - start.valueOf();
+	return Math.floor(diff / DAY);
 }
