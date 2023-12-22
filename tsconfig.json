@@ -1,9 +1,10 @@
 {
-  "files": ["src/index.ts"],
+  "files": ["src/index.ts", "src/index.d.ts"],
   "compilerOptions": {
     "target": "es2015",
     "module": "es2015",
     "declaration": true,
+    "declarationDir": "./dist",
     "outDir": "./dist",
     "noEmit": false,
     "strict": true,
@@ -14,6 +15,7 @@
     "strictPropertyInitialization": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
+    "allowJs": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
@@ -24,5 +26,9 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
