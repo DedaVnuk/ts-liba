@@ -1,0 +1,28 @@
+{
+  "lineWidth": 100,
+  "typescript": {
+    "useTabs": true,
+    "semiColons": "always",
+    "quoteStyle": "alwaysSingle",
+    "useBraces": "always",
+    "constructSignature.spaceAfterNewKeyword": true,
+    "forInStatement.spaceAfterForKeyword": false,
+    "forOfStatement.spaceAfterForKeyword": false,
+    "forStatement.spaceAfterForKeyword": false,
+    "ifStatement.spaceAfterIfKeyword": false,
+    "typeAssertion.spaceBeforeExpression": false,
+    "whileStatement.spaceAfterWhileKeyword": false,
+    "binaryExpression.operatorPosition": "sameLine"
+  },
+  "includes": [
+    "src/**/*.{ts}"
+  ],
+  "excludes": [
+    "**/dist",
+    "**/node_modules",
+    "**/*-lock.json"
+  ],
+  "plugins": [
+    "https://plugins.dprint.dev/typescript-0.88.7.wasm"
+  ]
+}
