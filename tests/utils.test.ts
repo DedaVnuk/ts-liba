@@ -20,20 +20,28 @@ test('countdown', () => {
 test('repeater', () => {
   const fn = jest.fn();
   repeater(fn, 3);
-
   expect(fn).toBeCalledTimes(1);
 
-  const failFn = jest.fn((count: number) => {
-    if(count < 3) {
-      throw new Error(`Error with repeat: ${count}`)
+
+  const successedAfterRepeat = jest.fn((count: number) => {
+    if(count === 3) {
+      return 'Successed';
     }
   
-    return 'Successed';
+    throw new Error(`Error with repeat: ${count}`)
   })
 
-  const result = repeater(failFn, 5);
-  expect(failFn).toBeCalledTimes(3);
+  const result = repeater(successedAfterRepeat, 5);
+  expect(successedAfterRepeat).toBeCalledTimes(3);
   expect(result).toBe('Successed');
+
+  const failedFn = jest.fn((count: number) => {
+    throw new Error(`Error with repeat: ${count}`)
+  })
+
+  const failedFnResult = repeater(failedFn, 3);
+  expect(failedFn).toBeCalledTimes(3);
+  expect(failedFnResult).toBeInstanceOf(Error);
 })
 
 test('curry', () => {

@@ -9,7 +9,14 @@ import {
   format,
   repeat,
   split,
+  substring,
 } from '../src/index';
+
+test('substring', () => {
+  expect(substring('hello', 3)).toBe('lo');
+  expect(substring('hello', -2)).toBe('lo');
+  expect(substring('hello', 1, 3)).toBe('el');
+})
 
 test('split', () => {
   expect(split('Hello')).toEqual(['H', 'e', 'l', 'l', 'o']);
