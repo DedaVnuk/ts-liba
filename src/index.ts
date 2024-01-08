@@ -1,4 +1,4 @@
-// types
+// #types
 
 export type ArrayUnion<T> = T[] | readonly T[];
 
@@ -145,7 +145,7 @@ export type Replace<
 	: Str;
 
 // ========
-// utils
+// #utils
 
 type AnimateProps = {
 	draw: Func<[number]>;
@@ -173,16 +173,16 @@ export function animate({ draw, timeFunc = (time) => time, duration = 1000 }: An
 	});
 }
 
-export function countdown(func: Func<[number]>, seconds: number, step = 1000) {
+export function countdown(func: Func<[number]>, count: number, step = 1000) {
 	let time = setTimeout(() => {
-		countdown(func, seconds - 1);
+		countdown(func, count - 1);
 	}, step);
 
-	if(seconds < 0) {
+	if(count < 0) {
 		return clearInterval(time);
 	}
 
-	func(seconds);
+	func(count);
 }
 
 type PartialExceptFirst<Args extends any[]> = Args extends [infer First, ...infer Rest]
@@ -230,20 +230,33 @@ export function length<T extends LengthArg>(value: T): T['length'] {
 	return value.length;
 }
 
-export function repeater<T>(fn: Func<[number], T>, attempts: number): T {
-	for(let i = 1; i < attempts; i++) {
-		try {
-			return fn(i);
-		} catch (error) {
-			console.error(error);
-		}
+export function repeater<T>(fn: Func<[number], T>, attempts: number): T | Error {
+	if(attempts <= 0) {
+		return new Error(`Function failed`);
 	}
 
-	throw new Error(`Function failed after ${attempts} attempts`);
+	try {
+		return fn(attempts);
+	} catch (error) {
+		return repeater<T>(fn, attempts - 1);
+	}
 }
 
 // ========
-// array
+// #array
+
+export function numberRange(from: number, to: number) {
+	const result: number[] = [];
+	if(to <= from) {
+		return result;
+	}
+
+	for(let i = from; i <= to; i++) {
+		result.push(i);
+	}
+
+	return result;
+}
 
 /**
  * Obj extends Record<string, any>
@@ -322,7 +335,11 @@ export function sum(arr: ArrayUnion<number>): number {
 }
 
 // ========
-// number
+// #number
+
+export function getRandomNumber(min = 0, max = 1) {
+	return Math.random() * (max - min + 1) + min;
+}
 
 export function abs<T extends number>(num: T) {
 	return Math.abs(num) as Abs<T>;
@@ -333,13 +350,14 @@ export function percentageOf<T extends number>(total: UINT<T>) {
 }
 
 // ========
-// object
+// #object
 
 export function entries<
 	Obj extends Record<string, any>,
 >(obj: Obj) {
 	return Object.entries(obj) as ObjectEntries<Obj>;
 }
+
 export function keys<Obj extends Record<string, any>>(obj: Obj) {
 	return Object.keys(obj) as (keyof Obj)[];
 }
@@ -378,7 +396,11 @@ export function values<Obj extends Record<string, any>>(obj: Obj) {
 }
 
 // ========
-// string
+// #string
+
+export function substring<T extends string>(str: T, start: number, end = str.length) {
+	return start >= 0 ? str.substring(start, end) : str.substring(end + start);
+}
 
 export type CamelCase<
 	Str extends string,
@@ -398,18 +420,12 @@ export function camelCase<
 >(str: Str, delimiter = ' ' as Delimiter) {
 	const words = split(str, delimiter);
 
-	return map(words, (word, i) => {
-		if(i === 0) {
-			return word;
-		}
-
-		return capitalize(word);
-	})
+	return map(words, (word, i) => i === 0 ? word : capitalize(word))
 		.join('') as CamelCase<Str, Delimiter>;
 }
 
 export function capitalize<Str extends string>(str: Str) {
-	return `${uppercase(str.substring(0, 1))}${str.substring(1)}` as Capitalize<Str>;
+	return `${uppercase(substring(str, 0, 1))}${substring(str, 1)}` as Capitalize<Str>;
 }
 
 export type Format<
@@ -432,11 +448,12 @@ export type Format<
 export function format<
 	Temp extends string,
 	Parts extends ArrayUnion<string>,
->(template: Temp, parts: Parts) {
+>(template: Temp, parts: Parts): Format<Temp, Parts> {
 	return parts.reduce((acc, part, index) => {
 		return String(acc).replace(`{$${index + 1}}`, `${part}`);
 	}, template) as Format<Temp, Parts>;
 }
+
 export function lowercase<Str extends string>(str: Str) {
 	return str.toLocaleLowerCase() as Lowercase<Str>;
 }
@@ -445,10 +462,10 @@ export function pascalCase<
 	Str extends string,
 	Delimiter extends string = ' ',
 >(str: Str, delimiter = ' ' as Delimiter) {
-	return str
-		.split(delimiter)
-		.map(capitalize)
-		.join('') as Capitalize<CamelCase<Str, Delimiter>>;
+	const splited = split(str, delimiter);
+	const mapped = map(splited, capitalize);
+
+	return join(mapped, '') as Capitalize<CamelCase<Str, Delimiter>>;
 }
 
 export type Repeat<
@@ -463,10 +480,9 @@ export function repeat<T extends string, N extends number>(str: T, count: N) {
 export function snakeCase<
 	Str extends string,
 	Delimiter extends string = ' ',
->(str: Str, delimiter = ' ' as Delimiter) {
-	return str
-		.split(delimiter)
-		.join('_') as Join<Split<Str, Delimiter>, '_'>;
+>(str: Str, delimiter = ' ' as Delimiter): Join<Split<Str, Delimiter>, '_'> {
+	const splited = split(str, delimiter);
+	return join(splited, '_');
 }
 
 export function split<
@@ -484,7 +500,7 @@ export function uppercase<Str extends string>(str: Str) {
 }
 
 // ========
-// date
+// #date
 
 const MILLISECONDS = 1000;
 const MINUTE = MILLISECONDS * 60;
