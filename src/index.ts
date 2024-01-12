@@ -2,6 +2,8 @@
 
 export type ArrayUnion<T> = T[] | readonly T[];
 
+export type OrNull<T> = T | null;
+
 export type First<Arr extends ArrayUnion<any>> = Arr[0];
 
 export type Last<Arr extends ArrayUnion<any>> = Arr extends readonly [...infer _, infer L] ? L
@@ -146,6 +148,27 @@ export type Replace<
 
 // ========
 // #utils
+
+export function nthArg<N extends number>(num: N) {
+	return <Args extends any[]>(...args: Args): Args[N] => args[num];
+}
+
+export function getId() {
+	let id = 1;
+	return () => id++;
+}
+
+export function getUID(len = 10) {
+	const alphanumericChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	let uid = '';
+
+	for(let i = 0; i < len; i++) {
+		const randomIndex = Math.floor(Math.random() * alphanumericChars.length);
+		uid += alphanumericChars[randomIndex];
+	}
+
+	return uid;
+}
 
 type AnimateProps = {
 	draw: Func<[number]>;
@@ -337,8 +360,14 @@ export function sum(arr: ArrayUnion<number>): number {
 // ========
 // #number
 
-export function getRandomNumber(min = 0, max = 1) {
-	return Math.random() * (max - min + 1) + min;
+export function getRandomNumber(min = 0, max = 1, decimals = 2) {
+	if(min >= max) {
+		[min, max] = [max, min];
+	}
+
+	const factor = Math.pow(10, decimals);
+	const randomNumber = Math.random() * (max - min) + min;
+	return Math.round(randomNumber * factor) / factor;
 }
 
 export function abs<T extends number>(num: T) {
