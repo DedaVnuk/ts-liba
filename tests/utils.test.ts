@@ -3,10 +3,40 @@ import {
   curry,
   countdown,
   repeater,
+  getId,
+  getUID,
+  nthArg,
 } from '../src/index';
 
 jest.useFakeTimers();
 jest.spyOn(global, 'setTimeout');
+
+test('nthArg', async () => {
+  const arr = ['a', 'b', 'c'];
+
+  const indexes = arr.map(nthArg(1));
+  expect(indexes).toEqual([0, 1, 2]);
+})
+
+test('getUID', () => {
+  expect(getUID()).toHaveLength(10);
+  expect(getUID(3)).toHaveLength(3);
+  expect(getUID(50)).toHaveLength(50);
+
+  const [uid, uid2] = [getUID(), getUID()];
+  expect(uid).not.toEqual(uid2);
+})
+
+test('getId', () => {
+  const id = getId();
+
+  const idsArr = [id(), id(), id()];
+  expect(idsArr).toEqual([1, 2, 3]);
+
+  const userId = getId();
+  expect(userId()).toBe(1);
+  expect(userId()).toBe(2);
+})
 
 test('countdown', () => {
   countdown(jest.fn, 3);
@@ -17,7 +47,7 @@ test('countdown', () => {
   jest.clearAllTimers();
 })
 
-test('repeater', () => {
+test('repeater', async () => {
   const fn = jest.fn();
   repeater(fn, 3);
   expect(fn).toBeCalledTimes(1);
@@ -42,6 +72,18 @@ test('repeater', () => {
   const failedFnResult = repeater(failedFn, 3);
   expect(failedFn).toBeCalledTimes(3);
   expect(failedFnResult).toBeInstanceOf(Error);
+
+
+  const fetchFn = jest.fn((count: number) => {
+    if(count > 2) {
+      throw new Error(`Fail`);
+    }
+
+    return Promise.resolve('Promise resolved');
+  })
+  const fetchFnResult = await repeater(fetchFn, 3);
+  expect(fetchFn).toBeCalledTimes(2);
+  expect(fetchFnResult).toBe('Promise resolved');
 })
 
 test('curry', () => {

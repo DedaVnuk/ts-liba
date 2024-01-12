@@ -3,6 +3,21 @@
 
 # utils
 
+### nthArg
+```
+nthArg<N extends number>(num: N): Func<Args, Args[N]>
+```
+
+### getId
+```
+getId(): Func<[], number>
+```
+
+### getUID
+```
+getUID(len = 10): string
+```
+
 ### animate
 ```
 type AnimateProps = {
@@ -106,7 +121,7 @@ sum(arr: ArrayUnion<number>): number
 
 ### getRandomNumber
 ```
-getRandomNumber(min = 0, max = 1): number
+getRandomNumber(min = 0, max = 1, decimals = 2): number
 ```
 
 ### abs
