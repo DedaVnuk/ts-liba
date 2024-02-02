@@ -4,6 +4,10 @@ export type ArrayUnion<T> = T[] | readonly T[];
 
 export type OrNull<T> = T | null;
 
+export type Equal<A, B> = (<T>() => T extends A ? 1 : 2) extends (<T>() => T extends B ? 1 : 2)
+	? true
+	: false;
+
 export type First<Arr extends ArrayUnion<any>> = Arr[0];
 
 export type Last<Arr extends ArrayUnion<any>> = Arr extends readonly [...infer _, infer L] ? L
@@ -149,6 +153,28 @@ export type Replace<
 // ========
 // #utils
 
+export function flip<Args extends any[], Return>(
+	fn: Func<Args, Return>,
+): Func<Reverse<Args>, Return> {
+	return (...args) => fn(...args.reverse() as Parameters<typeof fn>);
+}
+
+export function always<T>(value: T) {
+	return () => value;
+}
+
+export function alwaysTrue() {
+	return always(true);
+}
+
+export function alwaysFalse() {
+	return always(false);
+}
+
+export function alwaysNull() {
+	return always(null);
+}
+
 export function nthArg<N extends number>(num: N) {
 	return <Args extends any[]>(...args: Args): Args[N] => args[num];
 }
@@ -177,21 +203,17 @@ type AnimateProps = {
 };
 
 export function animate({ draw, timeFunc = (time) => time, duration = 1000 }: AnimateProps) {
-	let start = performance.now();
+	const start = performance.now();
 
-	requestAnimationFrame(function animate(time) {
+	requestAnimationFrame(function frameAnimate(time) {
 		// timeFraction от 0 до 1
-		let timeFraction = (time - start) / duration;
-		if(timeFraction > 1) {
-			timeFraction = 1;
-		}
+		const timeFraction = Math.min((time - start) / duration, 1);
 
-		let progress = timeFunc(timeFraction);
-
+		const progress = timeFunc(timeFraction);
 		draw(progress);
 
 		if(timeFraction < 1) {
-			requestAnimationFrame(animate);
+			requestAnimationFrame(frameAnimate);
 		}
 	});
 }
@@ -300,7 +322,7 @@ export function findBy<
 	const keyParts = String(key).split('.') as Keys;
 
 	return arr.find((item) => {
-		const res: any = reduce(keyParts, item, (acc, part) => acc[part]);
+		const res = reduce(keyParts, item, (acc, part) => acc[part]) as ObjectValueByKey<Obj, Key>;
 		return typeof needle === 'function' ? needle(item) : res === needle;
 	});
 }
@@ -335,9 +357,7 @@ export function reduce<T, Acc>(
 	let result = initialValue;
 
 	for(let i = 0; i < arr.length; i++) {
-		if(arr[i]) {
-			result = func(result, arr[i]!, i);
-		}
+		result = func(result, arr[i]!, i);
 	}
 
 	return result;
@@ -395,29 +415,20 @@ export function omit<Obj extends Record<string, any>, Keys extends (keyof Obj)[]
 	obj: Obj,
 	keys: Keys,
 ): Omit<Obj, Keys[number]> {
-	const objKeys = Object.keys(obj) as Keys;
-
-	const fn = (acc: Obj, key: keyof Obj) => {
-		if(keys.includes(key)) {
-			return acc;
-		}
-		acc[key] = obj[key];
+	return reduce(keys, { ...obj }, (acc, key) => {
+		delete acc[key];
 		return acc;
-	};
-
-	return reduce(objKeys, Object.create(null), fn);
+	});
 }
 
 export function pick<Obj extends Record<string, any>, Keys extends ArrayUnion<keyof Obj>>(
 	obj: Obj,
 	keys: Keys,
 ): Pick<Obj, Keys[number]> {
-	const fn = (acc: Obj, key: keyof Obj) => {
+	return reduce(keys, Object.create(null), (acc: Obj, key: keyof Obj) => {
 		acc[key] = obj[key];
 		return acc;
-	};
-
-	return reduce(keys, Object.create(null), fn);
+	});
 }
 
 export function values<Obj extends Record<string, any>>(obj: Obj) {

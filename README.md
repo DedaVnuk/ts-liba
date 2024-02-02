@@ -3,6 +3,32 @@
 
 # utils
 
+### flip
+```
+flip<Args extends any[], Return>(fn: Func<Args, Return>): Func<Reverse<Args>, Return>
+```
+
+### always
+```
+always<T>(value: T): Func<[], T>
+```
+
+### alwaysTrue
+```
+alwaysTrue(): Func<[], true>
+```
+
+### alwaysFalse
+```
+alwaysFalse(): Func<[], false>
+```
+
+### alwaysNull
+```
+alwaysNull(): Func<[], null>
+```
+
+
 ### nthArg
 ```
 nthArg<N extends number>(num: N): Func<Args, Args[N]>

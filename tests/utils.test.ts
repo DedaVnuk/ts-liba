@@ -6,10 +6,53 @@ import {
   getId,
   getUID,
   nthArg,
+  always,
+  alwaysTrue,
+  alwaysFalse,
+  alwaysNull,
+  flip,
+  pick,
 } from '../src/index';
 
 jest.useFakeTimers();
 jest.spyOn(global, 'setTimeout');
+
+test('flip', () => {
+  const fn = (arr: number[], multiplier: number) => arr.map((item) => item * multiplier);
+  const flipedFn = flip(fn);
+
+  const arr = [1, 2, 3];
+  expect(flipedFn(2, arr)).toEqual([2, 4, 6]);
+  expect(flipedFn(3, arr)).toEqual([3, 6, 9]);
+
+
+  const obj = { name: 'Joe', age: 20, admin: false };
+  const pickFn = flip(pick);
+
+  expect(pickFn(['name'], obj)).toEqual({ name: 'Joe' });
+  expect(pick(obj, ['name'])).toEqual({ name: 'Joe' });
+})
+
+test('always', () => {
+  const alwaysFn = always('Hello');
+  expect(alwaysFn()).toBe('Hello');
+})
+
+test('alwaysTrue', () => {
+  const fn = alwaysTrue();
+  expect(fn()).toBe(true);
+})
+
+test('alwaysFalse', () => {
+  const fn = alwaysFalse();
+  expect(fn()).toBe(false);
+})
+
+test('alwaysNull', () => {
+  const fn = alwaysNull();
+  expect(fn()).toBe(null);
+})
+
 
 test('nthArg', async () => {
   const arr = ['a', 'b', 'c'];

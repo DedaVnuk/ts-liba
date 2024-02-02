@@ -37,6 +37,12 @@ test('join', () => {
 })
 
 test('reduce', () => {
+
+  expect(reduce([0,1,0,2,null], [], (acc: string[], item) => {
+    acc.push(`${item}`)
+    return acc;
+  })).toEqual(['0', '1', '0', '2', 'null'])
+
   expect(reduce(arr, [], (acc: string[], item) => {
     acc.push(item.name)
     return acc;
