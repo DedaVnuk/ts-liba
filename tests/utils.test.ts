@@ -12,10 +12,65 @@ import {
   alwaysNull,
   flip,
   pick,
+  isEqual,
+  isNull,
+  isUndefined,
+  ifTrue,
+  ifFalse,
 } from '../src/index';
 
 jest.useFakeTimers();
 jest.spyOn(global, 'setTimeout');
+
+test('if{condition}', () => {
+  const notCalled = () => {};
+
+  expect(ifTrue(true, () => 5 + 3)).toBe(8);
+  expect(ifTrue(false, notCalled)).toBeUndefined();
+
+  expect(ifFalse(false, () => pick({ name: 'Baz', age: 20 }, ['name']))).toEqual({ name: 'Baz' });
+  expect(ifFalse(true, notCalled)).toBeUndefined();
+})
+
+test('isEqual', () => {
+  expect(isEqual('a', 'a')).toBeTruthy();
+  expect(isEqual('a', 'b')).toBeFalsy();
+  expect(isEqual('a', 'hello')).toBeFalsy();
+
+  const a = null;
+  expect(isNull(a!)).toBeTruthy();
+  expect(isNull('not null')).toBeFalsy();
+  expect(isNull('')).toBeFalsy();
+  expect(isNull(0)).toBeFalsy();
+  expect(isNull(NaN)).toBeFalsy();
+
+  expect(isUndefined(a)).toBeFalsy();
+  expect(isUndefined(undefined)).toBeTruthy();
+  expect(isUndefined(false)).toBeFalsy();
+
+  const obj1 = { name: 'a' };
+  const obj2 = { name: 'a' };
+  expect(isEqual(obj1, obj2)).toBeTruthy();
+
+  expect(isEqual({ name: 'Joe', age: 20 }, { name: 'Joe', admin: false })).toBeFalsy();
+  expect(isEqual({ name: 'Joe' }, { name: 'Joe', admin: false })).toBeFalsy();
+
+  const arr1 = [1];
+  const arr2 = [1];
+  expect(isEqual(arr1, arr2)).toBeTruthy();
+  expect(isEqual([1, 2, 3], ['a', 'b', 'c'])).toBeFalsy();
+
+  expect(isEqual(true, true)).toBeTruthy();
+  expect(isEqual(false, 0)).toBeFalsy();
+  expect(isEqual(undefined!, false)).toBeFalsy();
+
+  expect(isEqual([], [])).toBeTruthy();
+  expect(isEqual({}, {})).toBeTruthy();
+  expect(isEqual('', '')).toBeTruthy();
+
+  expect(isEqual(NaN, 1)).toBeFalsy();
+  expect(isEqual(NaN, undefined)).toBeFalsy();
+})
 
 test('flip', () => {
   const fn = (arr: number[], multiplier: number) => arr.map((item) => item * multiplier);

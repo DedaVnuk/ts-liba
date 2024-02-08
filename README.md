@@ -3,6 +3,31 @@
 
 # utils
 
+### ifTrue
+```
+ifTrue<Fn extends Func<any[]>>(condition: boolean, fn: Fn): ReturnType<Fn> | void
+```
+
+### ifFalse
+```
+ifFalse<Fn extends Func<any[]>>(condition: boolean, fn: Fn): ReturnType<Fn> | void
+```
+
+### isEqual
+```
+isEqual<A, B>(a: A, b: B): boolean
+```
+
+### isNull
+```
+isNull<T>(value: T): boolean
+```
+
+### isUndefined
+```
+isUndefined<T>(value: T): boolean
+```
+
 ### flip
 ```
 flip<Args extends any[], Return>(fn: Func<Args, Return>): Func<Reverse<Args>, Return>
