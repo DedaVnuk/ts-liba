@@ -1,5 +1,7 @@
 // #types
 
+type Single = string | number | symbol;
+
 export type ArrayUnion<T> = T[] | readonly T[];
 
 export type OrNull<T> = T | null;
@@ -152,6 +154,63 @@ export type Replace<
 
 // ========
 // #utils
+
+export function ifTrue<Fn extends Func<any[]>>(condition: boolean, fn: Fn): ReturnType<Fn> | void {
+	return condition ? fn() : void 0;
+}
+
+export function ifFalse<Fn extends Func<any[]>>(condition: boolean, fn: Fn): ReturnType<Fn> | void {
+	return condition ? void 0 : fn();
+}
+
+export function isEqual<A, B>(a: A, b: B): boolean {
+	if(typeof a !== typeof b) {
+		return false;
+	}
+
+	if(a === null && b === null) {
+		return true;
+	}
+
+	if(Array.isArray(a) && Array.isArray(b)) {
+		if(a.length !== b.length) {
+			return false;
+		}
+
+		for(let i = 0; i < a.length; i++) {
+			if(!isEqual(a[i], b[i])) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	if(typeof a === 'object' && typeof b === 'object') {
+		if(a === null || b === null) {
+			return false;
+		}
+		const keysA = keys(a);
+		const keysB = keys(b);
+
+		if(keysA.length !== keysB.length) {
+			return false;
+		}
+
+		const uniqueKeys = [...new Set([...keysA, ...keysB])];
+		return reduce(uniqueKeys, true, (_, key) => isEqual(a[key as keyof A], b[key as keyof B]));
+	}
+
+	return (a as Single) === (b as Single);
+}
+
+export function isNull<T>(value: T) {
+	return isEqual(value, null);
+}
+
+export function isUndefined<T>(value: T) {
+	return isEqual(value, undefined);
+}
 
 export function flip<Args extends any[], Return>(
 	fn: Func<Args, Return>,
