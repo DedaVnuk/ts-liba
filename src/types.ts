@@ -1,6 +1,6 @@
 export type Single = string | number | symbol;
 
-export type ArrayUnion<T> = T[] | readonly T[];
+export type ArrayUnion<T = unknown> = T[] | readonly T[];
 
 export type OrNull<T> = T | null;
 
@@ -8,16 +8,16 @@ export type Equal<A, B> = (<T>() => T extends A ? 1 : 2) extends (<T>() => T ext
 	? true
 	: false;
 
-export type First<Arr extends ArrayUnion<any>> = Arr[0];
+export type First<Arr extends ArrayUnion> = Arr[0];
 
-export type Last<Arr extends ArrayUnion<any>> = Arr extends readonly [...infer _, infer L] ? L
+export type Last<Arr extends ArrayUnion> = Arr extends readonly [...infer _, infer L] ? L
 	: Arr[number];
 
 type NegativeSlice<
-	Arr extends ArrayUnion<any>,
+	Arr extends ArrayUnion,
 	Count extends number,
-	ReversedArr extends ArrayUnion<any> = Reverse<Arr>,
-	Res extends any[] = [],
+	ReversedArr extends ArrayUnion = Reverse<Arr>,
+	Res extends unknown[] = [],
 	AbsCount extends number = Abs<Count>,
 > = Res['length'] extends AbsCount ? Reverse<Res>
 	: ReversedArr extends [infer Last, ...infer Rest]
@@ -25,24 +25,24 @@ type NegativeSlice<
 	: never;
 
 type PositiveSlice<
-	Arr extends ArrayUnion<any>,
+	Arr extends ArrayUnion,
 	Count extends number,
-	Res extends any[] = [],
+	Res extends unknown[] = [],
 > = Res['length'] extends Count ? Arr
 	: Arr extends readonly [infer First, ...infer Rest] ? PositiveSlice<Rest, Count, [...Res, First]>
 	: Arr;
 
 export type Slice<
-	Arr extends ArrayUnion<any>,
+	Arr extends ArrayUnion,
 	Count extends number,
 > = IsNegative<Count> extends true ? NegativeSlice<Arr, Count> : PositiveSlice<Arr, Count>;
 
 export type Reverse<
-	Arr extends ArrayUnion<any>,
-	Res extends any[] = [],
+	Arr extends ArrayUnion,
+	Res extends unknown[] = [],
 > = Arr extends [] ? Res
 	: Arr extends readonly [...infer Rest, infer Last]
-		? Rest extends any[] ? Reverse<Rest, [...Res, Last]>
+		? Rest extends unknown[] ? Reverse<Rest, [...Res, Last]>
 		: never
 	: Arr;
 
@@ -64,7 +64,7 @@ export type UnionToTuple<T, Last = LastInUnion<T>> = [T] extends [never] ? []
 export type Tuple<
 	Len extends number,
 	T = unknown,
-	Res extends any[] = [],
+	Res extends unknown[] = [],
 > = Res['length'] extends Len ? Res
 	: Tuple<Len, T, [...Res, T]>;
 export type IsNegative<Num extends number> = `${Num}` extends `-${number}` ? true : false;
@@ -81,11 +81,11 @@ type PathPrefix<Path extends string> = Path extends '' ? '' : `${Path}.`;
 type KeyIsString<Key> = Key extends string ? Key : never;
 
 export type ObjectKeys<
-	Obj extends Record<string, any>,
+	Obj extends Record<string, unknown>,
 	Path extends string = '',
 > = keyof {
 	[
-		Key in keyof Obj as Obj[Key] extends Record<string, any> ?
+		Key in keyof Obj as Obj[Key] extends Record<string, unknown> ?
 				| ObjectKeys<Obj[Key], `${PathPrefix<Path>}${KeyIsString<Key>}`>
 				| `${PathPrefix<Path>}${KeyIsString<Key>}`
 			: `${PathPrefix<Path>}${KeyIsString<Key>}`
@@ -93,20 +93,22 @@ export type ObjectKeys<
 };
 
 export type ObjectValueByKey<
-	Obj extends Record<string, any>,
+	Obj extends Record<string, unknown>,
 	Key extends ObjectKeys<Obj>,
 > = Key extends `${string}.${string}`
 	? Key extends `${infer First}.${infer Rest}`
-		? First extends keyof Obj ? ObjectValueByKey<Obj[First], Rest>
+		? First extends keyof Obj
+			? Obj[First] extends Record<string, unknown> ? ObjectValueByKey<Obj[First], Rest>
+			: never
 		: never
 	: never
 	: Key extends keyof Obj ? Obj[Key]
 	: never;
 
 export type ObjectEntries<
-	Obj extends Record<string, any>,
+	Obj extends Record<string, unknown>,
 	Keys = UnionToTuple<keyof Obj>,
-	Res extends Array<[string, any]> = [],
+	Res extends Array<[string, unknown]> = [],
 > = Keys extends [] ? Res
 	: Keys extends [infer First extends string, ...infer Rest]
 		? Rest extends string[] ? ObjectEntries<Obj, Rest, [...Res, [First, Obj[First]]]>
@@ -133,12 +135,12 @@ export type Split<
 	: Split<'', Delimiter, [...Res, Str]>;
 
 export type Join<
-	Arr extends ArrayUnion<any>,
+	Arr extends ArrayUnion,
 	Delimiter extends string = ',',
 	Res extends string = '',
 > = Arr['length'] extends 0 ? Res
 	: Arr extends readonly [infer First extends number | string | boolean, ...infer Rest]
-		? Rest extends readonly any[] ? Res extends '' ? Join<Rest, Delimiter, `${Res}${First}`>
+		? Rest extends readonly unknown[] ? Res extends '' ? Join<Rest, Delimiter, `${Res}${First}`>
 			: Join<Rest, Delimiter, `${Res}${Delimiter}${First}`>
 		: never
 	: string;

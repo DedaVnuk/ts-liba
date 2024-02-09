@@ -1,3 +1,4 @@
+import { map } from '../src/array';
 import { pick } from '../src/object';
 import {
 	always,
@@ -17,9 +18,32 @@ import {
 	length,
 	nthArg,
 	repeater,
+	toNumber,
+	toString,
 } from '../src/utils';
 jest.useFakeTimers();
 jest.spyOn(global, 'setTimeout');
+
+test('toString', () => {
+	expect(map([1, 2, 3], toString)).toEqual(['1', '2', '3']);
+	expect(toString(null)).toBe('null');
+	expect(toString(true)).toBe('true');
+	expect(toString(NaN)).toBe('NaN');
+	expect(toString('hello')).toBe('hello');
+	expect(toString([])).toBe('');
+	expect(toString({})).toBe('[object Object]');
+});
+
+test('toNumber', () => {
+	expect(toNumber('12')).toBe(12);
+	expect(toNumber('id-12')).toBe(NaN);
+	expect(toNumber('3.14')).toBe(3.14);
+	expect(toNumber('hello')).toBe(NaN);
+	expect(toNumber(null)).toBe(0);
+	expect(toNumber(undefined)).toBe(NaN);
+	expect(toNumber([])).toBe(0);
+	expect(toNumber({})).toBe(NaN);
+});
 
 test('if{condition}', () => {
 	const notCalled = () => {};
