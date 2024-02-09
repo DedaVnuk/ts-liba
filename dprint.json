@@ -15,7 +15,8 @@
     "binaryExpression.operatorPosition": "sameLine"
   },
   "includes": [
-    "src/**/*.{ts}"
+    "src/**/*.{ts}",
+    "tests/*.{ts}"
   ],
   "excludes": [
     "**/dist",
