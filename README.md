@@ -3,6 +3,16 @@
 
 # utils
 
+### toString
+```
+toString<T>(value: T): string
+```
+
+### toNumber
+```
+toNumber<T>(value: T): number
+```
+
 ### ifTrue
 ```
 ifTrue<Fn extends Func<any[]>>(condition: boolean, fn: Fn): ReturnType<Fn> | void

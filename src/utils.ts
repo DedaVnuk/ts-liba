@@ -7,6 +7,14 @@ import { Func, Reverse, Single, Slice } from './types';
 
 // #utils
 
+export function toString<T>(value: T): string {
+	return String(value);
+}
+
+export function toNumber<T>(value: T): number {
+	return Number(value);
+}
+
 export function ifTrue<Fn extends Func<any[]>>(condition: boolean, fn: Fn): ReturnType<Fn> | void {
 	return condition ? fn() : void 0;
 }
