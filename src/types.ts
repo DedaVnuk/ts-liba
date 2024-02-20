@@ -151,3 +151,13 @@ export type Replace<
 	Replacer extends string = '',
 > = Str extends `${infer Before}${Need}${infer After}` ? `${Before}${Replacer}${After}`
 	: Str;
+
+export type ReplaceAll<
+	Str extends string,
+	Need extends string,
+	Replacer extends string = '',
+> = Str extends `${infer Before}${Need}${infer After}`
+	? [`${Before}${Replacer}${After}`] extends [infer Replaced extends string]
+		? ReplaceAll<Replaced, Need, Replacer>
+	: never
+	: Str;

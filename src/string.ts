@@ -1,9 +1,42 @@
 // dprint-ignore
-import { join, map } from './array';
+import { join, map, reduce } from './array';
 // dprint-ignore
-import { ArrayUnion, Join, Replace, Split, Tuple } from './types';
+import { ArrayUnion, Join, Replace, ReplaceAll, Split, Trim, TrimLeft, TrimRight, Tuple } from './types';
 
 // #string
+
+export function trim<Str extends string>(str: Str) {
+	return str.trim() as Trim<Str>;
+}
+
+export function trimRight<Str extends string>(str: Str) {
+	return str.trimEnd() as TrimRight<Str>;
+}
+
+export function trimLeft<Str extends string>(str: Str) {
+	return str.trimStart() as TrimLeft<Str>;
+}
+
+export function replace<
+	Str extends string,
+	P extends string,
+	R extends string,
+>(str: Str, pattern: P, replacement: R) {
+	return str.replace(pattern, replacement) as Replace<Str, P, R>;
+}
+
+export function replaceAll<
+	Str extends string,
+	P extends string,
+	R extends string,
+>(str: Str, pattern: P, replacement: R) {
+	const chars = reduce(split(str), [] as string[], (acc, char) => {
+		acc.push(pattern === char ? replacement : char);
+		return acc;
+	});
+
+	return join(chars) as ReplaceAll<Str, P, R>;
+}
 
 export function substring<T extends string>(str: T, start: number, end = str.length) {
 	return start >= 0 ? str.substring(start, end) : str.substring(end + start);

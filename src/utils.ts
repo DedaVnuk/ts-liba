@@ -2,10 +2,33 @@
 import { reduce } from './array';
 // dprint-ignore
 import { keys } from './object';
+import { split } from './string';
 // dprint-ignore
-import { Func, Reverse, Single, Slice } from './types';
+import { ArrayUnion, Func, Reverse, Single, Slice, Split } from './types';
 
 // #utils
+
+export function includes<
+	D extends string | ArrayUnion,
+>(data: D, needle: (D extends string ? Split<D, ''> : D)[number], fromIndex = 0): boolean {
+	return indexOf(data, needle, fromIndex) >= 0;
+}
+
+export function indexOf<
+	D extends string | ArrayUnion,
+>(data: D, needle: (D extends string ? Split<D, ''> : D)[number], fromIndex = 0): number {
+	const items = typeof data === 'string' ? split(data) : data;
+	let index = -1;
+
+	for(let i = fromIndex; i < items.length; i++) {
+		if(items[i] === needle) {
+			index = i;
+			break;
+		}
+	}
+
+	return index;
+}
 
 export function toString<T>(value: T): string {
 	return String(value);
