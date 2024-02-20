@@ -12,6 +12,8 @@ import {
 	getUID,
 	ifFalse,
 	ifTrue,
+	includes,
+	indexOf,
 	isEqual,
 	isNull,
 	isUndefined,
@@ -23,6 +25,31 @@ import {
 } from '../src/utils';
 jest.useFakeTimers();
 jest.spyOn(global, 'setTimeout');
+
+test('includes', () => {
+	expect(includes([1, 2, 3], 2)).toBeTruthy();
+	expect(includes([1, 2, 3], 2, 2)).toBeFalsy();
+
+	const getArr = () => [1, 2, 3];
+	expect(includes(getArr(), 5)).toBeFalsy();
+
+	expect(includes('hello', 'e')).toBeTruthy();
+
+	const getStr = () => 'hello';
+	expect(includes(getStr(), 'w')).toBeFalsy();
+});
+
+test('indexOf', () => {
+	expect(indexOf('hello', 'l')).toBe(2);
+	expect(indexOf('hello', 'l', 4)).toBe(-1);
+
+	const getStr = () => 'hello';
+	expect(indexOf(getStr(), 'w')).toBe(-1);
+
+	expect(indexOf([1, 2, 3], 2)).toBe(1);
+	expect(indexOf([1, 2, 3], 2, 2)).toBe(-1);
+	expect(indexOf([1, 2, 3], 5)).toBe(-1);
+});
 
 test('toString', () => {
 	expect(map([1, 2, 3], toString)).toEqual(['1', '2', '3']);

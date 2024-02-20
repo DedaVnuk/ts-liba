@@ -5,12 +5,54 @@ import {
 	lowercase,
 	pascalCase,
 	repeat,
+	replace,
+	replaceAll,
 	snakeCase,
 	split,
 	substring,
+	trim,
+	trimLeft,
+	trimRight,
 	uncapitalize,
 	uppercase,
 } from '../src/string';
+
+test('trim', () => {
+	expect(trim('   hello')).toBe('hello');
+	expect(trim('   space on end ')).toBe('space on end');
+	expect(trim(' ')).toBe('');
+	expect(trim('')).toBe('');
+	expect(trim('\n')).toBe('');
+});
+
+test('trimRight', () => {
+	expect(trimRight('   hello')).toBe('   hello');
+	expect(trimRight('   space on end ')).toBe('   space on end');
+	expect(trimRight(' ')).toBe('');
+	expect(trimRight('')).toBe('');
+});
+
+test('trimLeft', () => {
+	expect(trimLeft('   hello')).toBe('hello');
+	expect(trimLeft('   space on end ')).toBe('space on end ');
+	expect(trimLeft(' ')).toBe('');
+	expect(trimLeft('')).toBe('');
+});
+
+test('replace', () => {
+	expect(replaceAll('hello_world', '_', ' ')).toBe('hello world');
+	expect(replaceAll('___', '_', '#')).toBe('###');
+	expect(replaceAll('foo', 'o', 't')).toBe('ftt');
+
+	const getString = () => '  Hello   ';
+	expect(replaceAll(getString(), ' ', '')).toBe('Hello');
+});
+
+test('replace', () => {
+	expect(replace('hello_world', '_', ' ')).toBe('hello world');
+	expect(replace('', '___', 'foo')).toBe('');
+	expect(replace('foo', 'o', 't')).toBe('fto');
+});
 
 test('substring', () => {
 	expect(substring('hello', 3)).toBe('lo');
