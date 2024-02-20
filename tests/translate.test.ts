@@ -12,6 +12,7 @@ test('translate default', () => {
 	expect(trans.chars('Охране посвящается!')).toBe('okhrane_posvyashchaetsya');
 	expect(trans.chars('Дорожные "зайцы"!')).toBe('dorozhnue_zaitsu');
 	expect(trans.chars('')).toBe('');
+	expect(trans.chars('Могу я знать?')).toBe('mogy_ya_znat\'');
 });
 
 test('translate no replace spec', () => {
@@ -45,12 +46,17 @@ test('translate setDictionary', () => {
 	const trans = new Translate();
 
 	expect(trans.word('привет')).toBe('');
+	expect(trans.chars('Могу я знать?')).toBe('mogy_ya_znat\'');
 
 	trans.setDictionary({
 		'привет': 'hello',
+		'ъ': '',
+		'ь': '',
+		' ': '-',
 	});
 
 	expect(trans.word('привет')).toBe('hello');
+	expect(trans.chars('Могу "я" знать?')).toBe('mogy-ya-znat');
 });
 
 test('translate toggleSpecialReplace', () => {
