@@ -26,10 +26,10 @@ const defaultDictionary = {
 	'ч': 'ch',
 	'ш': 'sh',
 	'щ': 'shch',
-	'ъ': 'ʺ',
+	'ъ': '"',
 	'ы': 'u',
-	'ь': 'ʹ',
-	'э': 'ė',
+	'ь': '\'',
+	'э': 'e',
 	'ю': 'yu',
 	'я': 'ya',
 	' ': '_',
@@ -89,8 +89,9 @@ export class Translate {
 		for(let i = 0; i < str.length; i++) {
 			const char = str[i]!.toLocaleLowerCase();
 
-			if(this.dictionary[char]) {
-				result += this.dictionary[char];
+			const dictValue = this.dictionary[char];
+			if(dictValue === '' || dictValue) {
+				result += dictValue;
 			} else {
 				result += this.replacer(char);
 			}
