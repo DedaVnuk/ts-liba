@@ -1,6 +1,6 @@
 {
   "name": "ts-liba",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Utils and types helpers",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -15,7 +15,7 @@
   "scripts": {
     "format": "dprint fmt",
     "collect": "cat ./src/* | grep -vE 'import|dprint' > index.ts",
-    "minify": "uglifyjs --compress -o ./dist/index.js -- ./dist/index.js",
+    "minify": "uglifyjs --mangle --compress -o ./dist/index.js -- ./dist/index.js",
     "build": "npm run collect; npm run format && tsc; rm index.ts; npm run minify",
     "test": "jest --verbose ./tests",
     "test-watch": "jest --watch --verbose ./tests"

@@ -3,6 +3,10 @@ import { ArrayUnion, First, Func, Join, Last, ObjectKeys, ObjectValueByKey, Reve
 
 // #array
 
+export function filter<T>(arr: ArrayUnion<T>, func: Func<[T], boolean>) {
+	return arr.filter(func);
+}
+
 export function numberRange(from: number, to: number) {
 	const result: number[] = [];
 	if(to <= from) {

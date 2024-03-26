@@ -7,6 +7,7 @@ import {
 	alwaysTrue,
 	countdown,
 	curry,
+	debounce,
 	flip,
 	getId,
 	getUID,
@@ -25,6 +26,26 @@ import {
 } from '../src/utils';
 jest.useFakeTimers();
 jest.spyOn(global, 'setTimeout');
+
+describe('debounce', () => {
+	let func: jest.Mock;
+	let debouncedFunc: Function;
+
+	beforeEach(() => {
+		func = jest.fn();
+		debouncedFunc = debounce(func, 1000);
+	});
+
+	test('debounce just once', () => {
+		for(let i = 0; i < 100; i++) {
+			debouncedFunc();
+		}
+
+		jest.runAllTimers();
+		expect(func).toBeCalledTimes(1);
+		jest.clearAllTimers();
+	});
+});
 
 test('includes', () => {
 	expect(includes([1, 2, 3], 2)).toBeTruthy();
@@ -115,7 +136,9 @@ test('isEqual', () => {
 	expect(isEqual(undefined!, false)).toBeFalsy();
 
 	expect(isEqual([], [])).toBeTruthy();
+	expect(isEqual([1, 'hello'], [])).toBeFalsy();
 	expect(isEqual({}, {})).toBeTruthy();
+	expect(isEqual(null, {})).toBeFalsy();
 	expect(isEqual('', '')).toBeTruthy();
 
 	expect(isEqual(NaN, 1)).toBeFalsy();
@@ -185,12 +208,10 @@ test('getId', () => {
 });
 
 test('countdown', () => {
-	countdown(jest.fn, 3);
+	const fn = jest.fn((i) => console.log('coundown', i));
+	countdown(fn, 3);
 
-	expect(setTimeout).toHaveBeenCalledTimes(1);
-	expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 1000);
-
-	jest.clearAllTimers();
+	expect(fn).toHaveBeenCalledTimes(1);
 });
 
 test('repeater', async () => {

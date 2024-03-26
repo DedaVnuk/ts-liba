@@ -72,6 +72,11 @@ word(word: string): string
 
 # utils
 
+### debounce
+```
+debounce<Fn extends Func<any[], any>>(func: Fn, delay: number): Func<Parameters<Fn>, Promise<ReturnType<Fn>>> 
+```
+
 ### includes
 ```
 includes<
@@ -200,6 +205,11 @@ repeater<T>(fn: Func<[number], T>, attempts: number): T | Error
 
 ---
 # array
+
+### filter
+```
+filter<T>(arr: ArrayUnion<T>, func: Func<[T], boolean>): T[]
+```
 
 ### numberRange
 ```

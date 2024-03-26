@@ -8,6 +8,19 @@ import { ArrayUnion, Func, Reverse, Single, Slice, Split } from './types';
 
 // #utils
 
+export function debounce<Fn extends Func<any[], any>>(func: Fn, delay: number) {
+	let timeout: NodeJS.Timeout;
+	return (...args: Parameters<Fn>) => {
+		return new Promise<ReturnType<Fn>>((resolve) => {
+			if(timeout) {
+				clearTimeout(timeout);
+			}
+
+			timeout = setTimeout(() => resolve(func(...args)), delay);
+		});
+	};
+}
+
 export function includes<
 	D extends string | ArrayUnion,
 >(data: D, needle: (D extends string ? Split<D, ''> : D)[number], fromIndex = 0): boolean {

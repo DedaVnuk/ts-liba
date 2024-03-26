@@ -1,5 +1,34 @@
-import { findBy, first, join, last, map, numberRange, reduce, reverse, sum } from '../src/array';
+import {
+	filter,
+	findBy,
+	first,
+	join,
+	last,
+	map,
+	numberRange,
+	reduce,
+	reverse,
+	sum,
+} from '../src/array';
 import { nthArg } from '../src/utils';
+
+test('filter', () => {
+	const arr = [1, 2, '3', 4, false, true, 0];
+	expect(filter(arr, (item) => typeof item !== 'string')).toEqual([1, 2, 4, false, true, 0]);
+
+	expect(filter(arr, Boolean)).toEqual([1, 2, '3', 4, true]);
+	expect(filter(arr, (item) => Number(item) > 10)).toEqual([]);
+
+	expect(filter([], Boolean)).toEqual([]);
+
+	const users = [
+		{ name: 'Joe', age: 14 },
+		{ name: 'Baz', age: 24 },
+		{ name: 'Jany', age: 18 },
+	];
+	const moreThen18 = ({ age }: typeof users[number]) => age > 18;
+	expect(filter(users, moreThen18)).toEqual([{ name: 'Baz', age: 24 }]);
+});
 
 test('numberRange', () => {
 	const arr = new Array(21).fill('').map(nthArg(1));
