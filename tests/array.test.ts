@@ -1,4 +1,5 @@
 import {
+	chunk,
 	filter,
 	findBy,
 	first,
@@ -11,6 +12,22 @@ import {
 	sum,
 } from '../src/array';
 import { nthArg } from '../src/utils';
+
+test('chunk', () => {
+	const arr = [1, 2, 3, 4, 5];
+	expect(chunk(arr, 2)).toEqual([[1, 2], [3, 4], [5]]);
+	expect(chunk(arr, 4)).toEqual([[1, 2, 3, 4], [5]]);
+
+	expect(chunk(arr, 0)).toEqual([]);
+	expect(chunk(arr, 10)).toEqual([[...arr]]);
+
+	const arr2: unknown[] = [];
+	expect(chunk(arr2, 0)).toEqual([]);
+	expect(chunk(arr2, 5)).toEqual([]);
+
+	const arr3 = [1, 'a', 2, 'b', { name: 'Joe', age: 20 }];
+	expect(chunk(arr3, 2)).toEqual([[1, 'a'], [2, 'b'], [{ name: 'Joe', age: 20 }]]);
+});
 
 test('filter', () => {
 	const arr = [1, 2, '3', 4, false, true, 0];

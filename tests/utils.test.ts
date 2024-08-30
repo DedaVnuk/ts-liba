@@ -5,9 +5,11 @@ import {
 	alwaysFalse,
 	alwaysNull,
 	alwaysTrue,
+	animate,
 	countdown,
 	curry,
 	debounce,
+	defer,
 	flip,
 	getId,
 	getUID,
@@ -26,6 +28,42 @@ import {
 } from '../src/utils';
 jest.useFakeTimers();
 jest.spyOn(global, 'setTimeout');
+
+global.window = global as any;
+global.window.requestAnimationFrame = (cb: FrameRequestCallback) => {
+	setTimeout(cb, 1000 / 60);
+	return 1000 / 60;
+};
+
+describe('animate', () => {
+	test('draw func', () => {
+		const draw = jest.fn((num: number) => console.log('animate', num));
+		animate({ draw, duration: 100 });
+
+		jest.runAllTimers();
+		expect(draw).toBeCalled();
+	});
+
+	test('draw {n} time calls', () => {
+		const drawNth = jest.fn((num: number) => console.log('animate {n} time', num));
+
+		animate({ draw: drawNth, duration: 100 });
+		jest.runAllTimers();
+
+		expect(drawNth).toBeCalledTimes(3);
+	});
+});
+
+test('defer', () => {
+	const fn = jest.fn((a: number) => a * 2);
+
+	defer(fn, 300);
+
+	jest.runAllTimers();
+	expect(fn).toBeCalledTimes(1);
+	expect(fn(5)).toBe(10);
+	expect(fn(5)).not.toBe(5);
+});
 
 describe('debounce', () => {
 	let func: jest.Mock;
@@ -207,11 +245,22 @@ test('getId', () => {
 	expect(userId()).toBe(2);
 });
 
-test('countdown', () => {
-	const fn = jest.fn((i) => console.log('coundown', i));
-	countdown(fn, 3);
+describe('countdown', () => {
+	test('one time called', () => {
+		const fn = jest.fn((i) => console.log('coundown', i));
+		countdown(fn, 1);
 
-	expect(fn).toHaveBeenCalledTimes(1);
+		expect(fn).toHaveBeenCalledTimes(1);
+	});
+
+	test('{n} time call', () => {
+		const fn = jest.fn((i) => console.log('{n}', i));
+		countdown(fn, 3, 300);
+
+		jest.runAllTimers();
+
+		expect(fn).toHaveBeenCalledTimes(3);
+	});
 });
 
 test('repeater', async () => {
