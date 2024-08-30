@@ -1,7 +1,7 @@
 // dprint-ignore
 import { reduce } from './array';
 // dprint-ignore
-import { ArrayUnion, ObjectEntries, ObjectKeys, ObjectValueByKey } from './types';
+import { ArrayUnion, ObjectEntries, ObjectValues } from './types';
 
 // #object
 
@@ -36,5 +36,5 @@ export function pick<Obj extends Record<string, any>, Keys extends ArrayUnion<ke
 }
 
 export function values<Obj extends Record<string, any>>(obj: Obj) {
-	return Object.values(obj) as ObjectValueByKey<Obj, ObjectKeys<Obj>>[];
+	return Object.values(obj) as ObjectValues<Obj>[];
 }

@@ -115,6 +115,10 @@ export type ObjectEntries<
 		: never
 	: never;
 
+export type ObjectValues<
+	Obj extends Record<string, unknown>,
+> = ObjectEntries<Obj>[number][1];
+
 export type TrimLeft<Str extends string> = Str extends ` ${infer S}` ? TrimLeft<S>
 	: Str;
 
@@ -144,6 +148,10 @@ export type Join<
 			: Join<Rest, Delimiter, `${Res}${Delimiter}${First}`>
 		: never
 	: string;
+
+export type PadStart<Str extends string, Pad extends string> = Split<Str, ''>['length'] extends 1
+	? `${Pad}${Str}`
+	: Str;
 
 export type Replace<
 	Str extends string,

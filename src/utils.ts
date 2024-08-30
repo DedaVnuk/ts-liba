@@ -178,7 +178,7 @@ export function countdown(func: Func<[number]>, count: number, step = 1000) {
 		countdown(func, count - 1);
 	}, step);
 
-	if(count < 0) {
+	if(count <= 0) {
 		return clearInterval(time);
 	}
 

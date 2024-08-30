@@ -206,6 +206,11 @@ repeater<T>(fn: Func<[number], T>, attempts: number): T | Error
 ---
 # array
 
+### chunk
+```
+chunk<T, Num extends number>(arr: T[], count: UINT<Num>): Array<T[]>
+```
+
 ### filter
 ```
 filter<T>(arr: ArrayUnion<T>, func: Func<[T], boolean>): T[]
@@ -273,6 +278,11 @@ sum(arr: ArrayUnion<number>): number
 ---
 # number
 
+### twoDigits
+```
+twoDigits<T extends number>(num: T): PadStart<T, '0'>
+```
+
 ### getRandomNumber
 ```
 getRandomNumber(min = 0, max = 1, decimals = 2): number
@@ -319,7 +329,7 @@ pick<Obj extends Record<string, any>, Keys extends ArrayUnion<keyof Obj>>(
 
 ### values
 ```
-values<Obj extends Record<string, any>>(obj: Obj): ObjectValueByKey<Obj, ObjectKeys<Obj>>[]
+values<Obj extends Record<string, any>>(obj: Obj): ObjectValues<Obj>[]
 ```
 
 # string

@@ -1,5 +1,5 @@
 // dprint-ignore
-import { Abs, UINT } from './types';
+import { Abs, PadStart, UINT } from './types';
 
 // #number
 
@@ -19,4 +19,8 @@ export function abs<T extends number>(num: T) {
 
 export function percentageOf<T extends number>(total: UINT<T>) {
 	return <V extends number>(value: UINT<V>) => value / total;
+}
+
+export function twoDigits<T extends number>(num: T) {
+	return num.toString().padStart(2, '0') as PadStart<`${T}`, '0'>;
 }
