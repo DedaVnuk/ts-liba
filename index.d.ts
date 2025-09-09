@@ -1,1 +1,1 @@
-declare module 'ts-liba';
+declare module 'try-fetch';

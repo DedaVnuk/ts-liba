@@ -1,7 +1,7 @@
 {
-  "name": "ts-liba",
-  "version": "0.2.4",
-  "description": "Utils and types helpers",
+  "name": "try-fetch",
+  "version": "0.0.1",
+  "description": "js fetch wrapper",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "module": "./dist/index.mjs",
@@ -22,22 +22,24 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DedaVnuk/ts-liba.git"
+    "url": "git+https://github.com/DedaVnuk/try-fetch.git"
   },
   "keywords": [
-    "Liba",
+    "fetch",
     "typescript",
     "ts",
     "utils",
-    "helpers",
-    "types"
+    "try/catch",
+    "types",
+    "abort signal",
+    "refetch"
   ],
   "author": "Sumarokov Vladimir <sumarokov.world@gmail.com>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/DedaVnuk/ts-liba/issues"
+    "url": "https://github.com/DedaVnuk/try-fetch/issues"
   },
-  "homepage": "https://github.com/DedaVnuk/ts-liba#readme",
+  "homepage": "https://github.com/DedaVnuk/try-fetch#readme",
   "devDependencies": {
     "@types/jest": "^29.5.4",
     "dprint": "^0.44.0",
