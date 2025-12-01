@@ -1,10 +1,20 @@
-import { entries, keys, omit, pick, values } from '../src/object';
+import { entries, isObject, keys, omit, pick, values } from '../src/object';
 
 const obj = {
 	name: 'Joe',
 	age: 20,
 	admin: false,
 };
+
+test('isObject', () => {
+	expect(isObject(obj)).toBeTruthy();
+	expect(isObject(null)).toBeFalsy();
+	expect(isObject([])).toBeFalsy();
+	expect(isObject({})).toBeTruthy();
+	expect(isObject(() => {})).toBeFalsy();
+	expect(isObject(3.14)).toBeFalsy();
+	expect(isObject(false)).toBeFalsy();
+});
 
 test('entries', () => {
 	expect(entries(obj)).toEqual([['name', 'Joe'], ['age', 20], ['admin', false]]);

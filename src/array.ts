@@ -1,5 +1,17 @@
 // dprint-ignore
-import { ArrayUnion, First, Func, Join, Last, ObjectKeys, ObjectValueByKey, Reverse, Split, UINT } from './types'
+import { split } from './string';
+import {
+	ArrayUnion,
+	First,
+	Func,
+	Join,
+	Last,
+	ObjectKeys,
+	ObjectValueByKey,
+	Reverse,
+	UINT,
+} from './types';
+import { isEqual } from './utils';
 
 // #array
 
@@ -36,7 +48,7 @@ export function numberRange(from: number, to: number) {
 }
 
 /**
- * Obj extends Record<string, any>
+ * Obj extends Record<string, unknown>
  *
  * @param arr - Obj[]
  * @param key - ObjectKeys<Obj>
@@ -44,34 +56,41 @@ export function numberRange(from: number, to: number) {
  * @returns - Obj | undefined
  */
 export function findBy<
-	Obj extends Record<string, any>,
+	Obj extends Record<string, unknown>,
 	Key extends ObjectKeys<Obj>,
-	Keys extends string[] = Split<Key extends string ? Key : never, '.'>,
 	Need extends ObjectValueByKey<Obj, Key> | Func<[Obj], boolean> =
 		| ObjectValueByKey<Obj, Key>
 		| Func<[Obj], boolean>,
->(arr: ArrayUnion<Obj>, key: Key, needle: Need) {
-	const keyParts = String(key).split('.') as Keys;
+>(arr: ArrayUnion<Obj>, key: Key, needle: Need): Obj | undefined {
+	if(typeof needle === 'function') {
+		return arr.find(needle as Func<[Obj], boolean>);
+	}
 
+	const keyParts = split(String(key), '.');
 	return arr.find((item) => {
-		const res = reduce(keyParts, item, (acc, part) => acc[part]) as ObjectValueByKey<Obj, Key>;
-		return typeof needle === 'function' ? needle(item) : res === needle;
+		const value = reduce(
+			keyParts,
+			Object.create(null),
+			(acc, keyPart) => acc[keyPart] ?? item[keyPart],
+		);
+
+		return isEqual(value, needle);
 	});
 }
 
-export function first<T extends ArrayUnion<any>>(arr: T): First<T> {
+export function first<T extends ArrayUnion>(arr: T): First<T> {
 	return arr[0];
 }
 
 export function join<
-	Arr extends ArrayUnion<any>,
+	Arr extends ArrayUnion,
 	Sep extends string = '',
 >(arr: Arr, separator: Sep = '' as Sep) {
 	return arr.join(separator) as Join<Arr, Sep>;
 }
 
-export function last<T extends ArrayUnion<any>>(arr: T): Last<T> {
-	return arr[arr.length - 1];
+export function last<T extends ArrayUnion>(arr: T) {
+	return arr.at(-1) as Last<T>;
 }
 
 export function map<T, R>(arr: ArrayUnion<T>, func: Func<[T, number], R>): R[] {

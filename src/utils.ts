@@ -1,14 +1,14 @@
 // dprint-ignore
 import { reduce } from './array';
 // dprint-ignore
-import { keys } from './object';
+import { isObject, keys } from './object';
 import { split } from './string';
 // dprint-ignore
 import { ArrayUnion, Func, Reverse, Single, Slice, Split } from './types';
 
 // #utils
 
-export function debounce<Fn extends Func<any[], any>>(func: Fn, delay: number) {
+export function debounce<Fn extends Func<unknown[], unknown>>(func: Fn, delay: number) {
 	let timeout: NodeJS.Timeout;
 	return (...args: Parameters<Fn>) => {
 		return new Promise<ReturnType<Fn>>((resolve) => {
@@ -16,7 +16,7 @@ export function debounce<Fn extends Func<any[], any>>(func: Fn, delay: number) {
 				clearTimeout(timeout);
 			}
 
-			timeout = setTimeout(() => resolve(func(...args)), delay);
+			timeout = setTimeout(() => resolve(func(...args) as ReturnType<Fn>), delay);
 		});
 	};
 }
@@ -51,11 +51,11 @@ export function toNumber<T>(value: T): number {
 	return Number(value);
 }
 
-export function ifTrue<Fn extends Func<any[]>>(condition: boolean, fn: Fn): ReturnType<Fn> | void {
+export function ifTrue<Fn extends Func>(condition: boolean, fn: Fn): ReturnType<Fn> | void {
 	return condition ? fn() : void 0;
 }
 
-export function ifFalse<Fn extends Func<any[]>>(condition: boolean, fn: Fn): ReturnType<Fn> | void {
+export function ifFalse<Fn extends Func>(condition: boolean, fn: Fn): ReturnType<Fn> | void {
 	return condition ? void 0 : fn();
 }
 
@@ -82,10 +82,7 @@ export function isEqual<A, B>(a: A, b: B): boolean {
 		return true;
 	}
 
-	if(typeof a === 'object' && typeof b === 'object') {
-		if(a === null || b === null) {
-			return false;
-		}
+	if(isObject(a) && isObject(b)) {
 		const keysA = keys(a);
 		const keysB = keys(b);
 
@@ -108,7 +105,7 @@ export function isUndefined<T>(value: T) {
 	return isEqual(value, undefined);
 }
 
-export function flip<Args extends any[], Return>(
+export function flip<Args extends unknown[], Return>(
 	fn: Func<Args, Return>,
 ): Func<Reverse<Args>, Return> {
 	return (...args) => fn(...args.reverse() as Parameters<typeof fn>);
@@ -131,7 +128,7 @@ export function alwaysNull() {
 }
 
 export function nthArg<N extends number>(num: N) {
-	return <Args extends any[]>(...args: Args): Args[N] => args[num];
+	return <Args extends unknown[]>(...args: Args): Args[N] => args[num];
 }
 
 export function getId() {
@@ -185,18 +182,18 @@ export function countdown(func: Func<[number]>, count: number, step = 1000) {
 	func(count);
 }
 
-type PartialExceptFirst<Args extends any[]> = Args extends [infer First, ...infer Rest]
+type PartialExceptFirst<Args extends unknown[]> = Args extends [infer First, ...infer Rest]
 	? [Required<First>, ...Partial<Rest>]
 	: [];
 
 type GetArgs<
-	FnArgs extends any[],
-	Params extends any[],
+	FnArgs extends unknown[],
+	Params extends unknown[],
 > = PartialExceptFirst<Params extends [] ? FnArgs : Slice<FnArgs, Params['length']>>;
 
 export type Curry<
-	Fn extends Func<any[], any>,
-	Params extends any[] = [],
+	Fn extends Func,
+	Params extends unknown[] = [],
 > = Fn extends (...args: infer FnParams) => infer FnReturn
 	? FnParams['length'] extends Params['length'] ? FnReturn
 	: <Args extends GetArgs<Parameters<Fn>, Params>>(
@@ -210,11 +207,11 @@ export type Curry<
 export function curry<
 	Fn extends Func<any[], any>,
 >(func: Fn) {
-	return function curried(...args) {
+	return function curried(...args: unknown[]) {
 		if(args.length >= func.length) {
 			return func(...args);
 		} else {
-			return (...args2) => curried(...[...args, ...args2]);
+			return (...args2: unknown[]) => curried(...[...args, ...args2]);
 		}
 	} as Curry<Fn>;
 }

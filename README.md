@@ -301,6 +301,11 @@ percentageOf<T extends number>(total: UINT<T>): Func<[UINT<number>], number>
 ---
 # object
 
+### isObject
+```
+isObject(value: unknown): value is Record<string, unknown>
+```
+
 ### entries
 ```
 entries<Obj extends Record<string, any>>(obj: Obj): ObjectEntries<Obj>

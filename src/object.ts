@@ -1,21 +1,29 @@
 // dprint-ignore
 import { reduce } from './array';
 // dprint-ignore
-import { ArrayUnion, ObjectEntries, ObjectValues } from './types';
+import { ArrayUnion, ObjectEntries, ObjectType, ObjectValues } from './types';
 
 // #object
 
+export function isObject(value: unknown): value is ObjectType {
+	return (
+		typeof value === 'object' &&
+		value !== null &&
+		!Array.isArray(value)
+	);
+}
+
 export function entries<
-	Obj extends Record<string, any>,
+	Obj extends ObjectType,
 >(obj: Obj) {
 	return Object.entries(obj) as ObjectEntries<Obj>;
 }
 
-export function keys<Obj extends Record<string, any>>(obj: Obj) {
+export function keys<Obj extends ObjectType>(obj: Obj) {
 	return Object.keys(obj) as (keyof Obj)[];
 }
 
-export function omit<Obj extends Record<string, any>, Keys extends (keyof Obj)[]>(
+export function omit<Obj extends ObjectType, Keys extends (keyof Obj)[]>(
 	obj: Obj,
 	keys: Keys,
 ): Omit<Obj, Keys[number]> {
@@ -25,7 +33,7 @@ export function omit<Obj extends Record<string, any>, Keys extends (keyof Obj)[]
 	});
 }
 
-export function pick<Obj extends Record<string, any>, Keys extends ArrayUnion<keyof Obj>>(
+export function pick<Obj extends ObjectType, Keys extends ArrayUnion<keyof Obj>>(
 	obj: Obj,
 	keys: Keys,
 ): Pick<Obj, Keys[number]> {
@@ -35,6 +43,6 @@ export function pick<Obj extends Record<string, any>, Keys extends ArrayUnion<ke
 	});
 }
 
-export function values<Obj extends Record<string, any>>(obj: Obj) {
+export function values<Obj extends ObjectType>(obj: Obj) {
 	return Object.values(obj) as ObjectValues<Obj>[];
 }

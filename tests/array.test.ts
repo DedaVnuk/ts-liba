@@ -58,10 +58,10 @@ test('numberRange', () => {
 });
 
 const arr = [
-	{ name: 'Joe', age: 20, phone: { home: '1', work: '101' } },
-	{ name: 'Baz', age: 12, phone: { home: '2', work: '102' } },
-	{ name: 'Fred', age: 20, phone: { home: '3', work: '103' } },
-	{ name: 'Bar', age: 32, phone: { home: '4', work: '104' } },
+	{ name: 'Joe', age: 20, phone: { home: '1', work: '101' }, friends: [1, 2, 3] },
+	{ name: 'Baz', age: 12, phone: { home: '2', work: '102' }, friends: [2] },
+	{ name: 'Fred', age: 20, phone: { home: '3', work: '103' }, friends: [1, 3] },
+	{ name: 'Bar', age: 32, phone: { home: '4', work: '104' }, friends: [3] },
 ] as const;
 
 test('join', () => {
@@ -119,6 +119,7 @@ test('map', () => {
 test('findBy', () => {
 	expect(findBy(arr, 'name', 'Baz')).toEqual(arr[1]);
 	expect(findBy(arr, 'age', 20)).toEqual(arr[0]);
+	expect(findBy(arr, 'friends', [2])).toEqual(arr[1]);
 	expect(findBy(arr, 'phone.home', '3')).toEqual(arr[2]);
 
 	expect(findBy(arr, 'age', ({ age }) => age < 18)).toEqual(arr[1]);

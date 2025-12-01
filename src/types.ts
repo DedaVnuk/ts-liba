@@ -2,6 +2,8 @@ export type Single = string | number | symbol;
 
 export type ArrayUnion<T = unknown> = T[] | readonly T[];
 
+export type ObjectType<T = unknown> = Record<string, T>;
+
 export type OrNull<T> = T | null;
 
 export type Equal<A, B> = (<T>() => T extends A ? 1 : 2) extends (<T>() => T extends B ? 1 : 2)
@@ -46,7 +48,7 @@ export type Reverse<
 		: never
 	: Arr;
 
-export type Func<Args extends unknown[], Return = void> = (...args: Args) => Return;
+export type Func<Args extends unknown[] = unknown[], Return = void> = (...args: Args) => Return;
 
 type UnionToIntersection<U> = (U extends unknown ? (arg: U) => 0 : never) extends (
 	arg: infer I,
@@ -67,6 +69,7 @@ export type Tuple<
 	Res extends unknown[] = [],
 > = Res['length'] extends Len ? Res
 	: Tuple<Len, T, [...Res, T]>;
+
 export type IsNegative<Num extends number> = `${Num}` extends `-${number}` ? true : false;
 
 export type ToNegative<Num extends number> = `-${Num}` extends `${infer N extends number}` ? N
@@ -76,25 +79,19 @@ export type Abs<Num extends number> = `${Num}` extends `-${infer N extends numbe
 
 export type UINT<Num extends number> = IsNegative<Num> extends true ? never : Num;
 
-type PathPrefix<Path extends string> = Path extends '' ? '' : `${Path}.`;
-
-type KeyIsString<Key> = Key extends string ? Key : never;
-
-export type ObjectKeys<
-	Obj extends Record<string, unknown>,
-	Path extends string = '',
-> = keyof {
-	[
-		Key in keyof Obj as Obj[Key] extends Record<string, unknown> ?
-				| ObjectKeys<Obj[Key], `${PathPrefix<Path>}${KeyIsString<Key>}`>
-				| `${PathPrefix<Path>}${KeyIsString<Key>}`
-			: `${PathPrefix<Path>}${KeyIsString<Key>}`
-	]: Obj[Key];
-};
+export type ObjectKeys<Obj extends Record<string | number, unknown>> = Obj extends
+	Record<string | number, unknown> ? {
+		[Key in keyof Obj]: Key extends string | number
+			? Obj[Key] extends Record<string | number, unknown>
+				? `${Key}` | `${Key}.${ObjectKeys<Obj[Key]>}`
+			: `${Key}`
+			: never;
+	}[keyof Obj]
+	: never;
 
 export type ObjectValueByKey<
 	Obj extends Record<string, unknown>,
-	Key extends ObjectKeys<Obj>,
+	Key extends string,
 > = Key extends `${string}.${string}`
 	? Key extends `${infer First}.${infer Rest}`
 		? First extends keyof Obj
