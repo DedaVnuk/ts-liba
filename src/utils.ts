@@ -9,7 +9,7 @@ import { ArrayUnion, Func, Reverse, Single, Slice, Split } from './types';
 // #utils
 
 export function debounce<Fn extends Func<unknown[], unknown>>(func: Fn, delay: number) {
-	let timeout: NodeJS.Timeout;
+	let timeout: ReturnType<typeof setTimeout>;
 	return (...args: Parameters<Fn>) => {
 		return new Promise<ReturnType<Fn>>((resolve) => {
 			if(timeout) {
@@ -155,6 +155,9 @@ type AnimateProps = {
 };
 
 export function animate({ draw, timeFunc = (time) => time, duration = 1000 }: AnimateProps) {
+	if(typeof requestAnimationFrame === 'undefined') {
+		return;
+	}
 	const start = performance.now();
 
 	requestAnimationFrame(function frameAnimate(time) {
@@ -172,11 +175,11 @@ export function animate({ draw, timeFunc = (time) => time, duration = 1000 }: An
 
 export function countdown(func: Func<[number]>, count: number, step = 1000) {
 	let time = setTimeout(() => {
-		countdown(func, count - 1);
+		countdown(func, count - 1, step);
 	}, step);
 
 	if(count <= 0) {
-		return clearInterval(time);
+		return clearTimeout(time);
 	}
 
 	func(count);

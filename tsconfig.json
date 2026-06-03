@@ -1,11 +1,19 @@
 {
-  "files": ["index.ts", "index.d.ts"],
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "tests"
+  ],
   "compilerOptions": {
     "target": "es2015",
     "module": "es2015",
+    "moduleResolution": "node",
     "declaration": true,
-    "declarationDir": "./dist",
-    "outDir": "./dist",
+    "declarationDir": "./dist/esm",
+    "outDir": "./dist/esm",
     "noEmit": false,
     "strict": true,
     "noImplicitAny": true,
@@ -26,9 +34,5 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
-  },
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  }
 }
